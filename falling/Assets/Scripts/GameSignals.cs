@@ -9,6 +9,7 @@ public class GameSignals : MonoBehaviour
 
     public static void RaiseGameOver()
     {
+        Debug.Log("게임오버 호출됨");
         GameOver?.Invoke();
     }
 

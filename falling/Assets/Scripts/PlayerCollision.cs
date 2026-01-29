@@ -3,16 +3,18 @@ public class PlayerCollision : MonoBehaviour
 {
     private bool isDead;
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnControllerColliderHit(ControllerColliderHit hit)
     {
         if (isDead) return;
 
-        if (collision.collider.TryGetComponent<SoundTrigger>(out _))
+        var other = hit.collider;
+
+        if (other.TryGetComponent<SoundTrigger>(out _))
         {
             GameSignals.RaiseSoundOn();
         }
 
-        if (collision.collider.TryGetComponent<Obstacle>(out var obstacle))
+        if (other.TryGetComponent<Obstacle>(out _))
         {
             Die();
         }

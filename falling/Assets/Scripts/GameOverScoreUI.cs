@@ -6,17 +6,11 @@ public class GameOverScoreUI : MonoBehaviour
     [SerializeField] private ScoreManager scoreManager;
     [SerializeField] private TMP_Text scoreText;
 
-    private void OnEnable()
+    private void Awake()
     {
-        GameSignals.GameOver += OnGameOver;
+        UpdateScoreText();
     }
-
-    private void OnDisable()
-    {
-        GameSignals.GameOver -= OnGameOver;
-    }
-
-    private void OnGameOver()
+    private void UpdateScoreText()
     {
         if (scoreText == null)
         {
