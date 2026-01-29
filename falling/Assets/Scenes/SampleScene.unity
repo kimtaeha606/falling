@@ -2813,6 +2813,52 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!1 &1306549471
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1306549473}
+  - component: {fileID: 1306549472}
+  m_Layer: 0
+  m_Name: SoundEventPlayer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1306549472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1306549471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f819ed739da6834990f0adebe5fcb4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoundEventPlayer
+  loopClip: {fileID: 8300000, guid: 025b64cf9f9e829468611e74cd27ff05, type: 3}
+  gameOverClip: {fileID: 8300000, guid: 5ddead24074ce0c438ab18b3357c6c54, type: 3}
+--- !u!4 &1306549473
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1306549471}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 83.86478, y: 0, z: 47.8142}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1413199562
 GameObject:
   m_ObjectHideFlags: 0
@@ -4033,3 +4079,4 @@ SceneRoots:
   - {fileID: 485794925}
   - {fileID: 495487734}
   - {fileID: 587353559}
+  - {fileID: 1306549473}

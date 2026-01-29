@@ -2,8 +2,29 @@ using UnityEngine;
 
 public class SoundEventPlayer : MonoBehaviour
 {
-    [SerializeField] private AudioSource loopSource;
-    [SerializeField] private AudioSource gameOverSource;
+    [Header("Clips")]
+    [SerializeField] private AudioClip loopClip;      // BGM
+    [SerializeField] private AudioClip gameOverClip;  // GameOver SFX
+
+    private AudioSource loopSource;
+    private AudioSource gameOverSource;
+
+    private void Awake()
+    {
+        // BGM용 AudioSource 생성
+        loopSource = gameObject.AddComponent<AudioSource>();
+        loopSource.clip = loopClip;
+        loopSource.loop = true;
+        loopSource.playOnAwake = false;
+        loopSource.spatialBlend = 0f; // 2D
+
+        // GameOver용 AudioSource 생성
+        gameOverSource = gameObject.AddComponent<AudioSource>();
+        gameOverSource.clip = gameOverClip;
+        gameOverSource.loop = false;
+        gameOverSource.playOnAwake = false;
+        gameOverSource.spatialBlend = 0f; // 2D
+    }
 
     private void OnEnable()
     {
@@ -19,23 +40,22 @@ public class SoundEventPlayer : MonoBehaviour
 
     private void HandleSoundOn()
     {
-        if (loopSource == null) return;
+        if (loopClip == null) return;
 
-        loopSource.loop = true;
         if (!loopSource.isPlaying)
-        {
             loopSource.Play();
-        }
     }
 
     private void HandleGameOver()
     {
-        if (gameOverSource == null) return;
+        // BGM 중단
+        if (loopSource.isPlaying)
+            loopSource.Stop();
 
-        gameOverSource.loop = false;
-        if (!gameOverSource.isPlaying)
-        {
-            gameOverSource.Play();
-        }
+        if (gameOverClip == null) return;
+
+        // 항상 처음부터 재생
+        gameOverSource.Stop();
+        gameOverSource.Play();
     }
 }
