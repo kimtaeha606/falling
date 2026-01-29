@@ -6,6 +6,9 @@ public class ScoreManager : MonoBehaviour
     private float lastY;
     private bool hasLastY;
 
+    public float LastScore => lastY;
+    public bool HasScore => hasLastY;
+
     private void Update()
     {
         if (player == null)
