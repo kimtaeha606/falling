@@ -47,5 +47,9 @@ MonoBehaviour:
   size: 10
   cellSize: 1
   blockHeight: 1
+  wallPrefab: {fileID: 3657992355417750575, guid: c1f1375055394cf49a1d36c8d17a703d, type: 3}
+  buildWallsOnInitialize: 1
+  wallPadding: 0
+  autoScaleWallLength: 0
   disableRendererForHole: 1
   disableColliderForHole: 1
