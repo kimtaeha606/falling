@@ -17,8 +17,8 @@ public class LayerPooler : MonoBehaviour
     [SerializeField] private float recycleAbovePlayer = 15f;
 
     [Header("Player Motion (Constant)")]
-    [SerializeField] private float fallSpeed = 8f;   // y 등속 낙하(절댓값)
-    [SerializeField] private float moveSpeed = 6f;   // xz 등속 이동(최대)
+    [SerializeField] private float fallSpeed = 80f;   // y 등속 낙하(절댓값)
+    [SerializeField] private float moveSpeed = 12;   // xz 등속 이동(최대)
     [SerializeField] private float cellSize = 1f;    // FloorLayer와 동일
     [SerializeField] private int gridSize = 10;      // 10x10
     [SerializeField] private float reachableSlack = 0.85f; // 여유 계수

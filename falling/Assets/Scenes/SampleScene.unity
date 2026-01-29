@@ -1246,11 +1246,11 @@ MonoBehaviour:
   layerPrefab: {fileID: 2430587467273746142, guid: 2ff1e332c7ec1694a924b3dca5a2db4d, type: 3}
   player: {fileID: 601263342}
   poolCount: 4
-  layerGap: 5
+  layerGap: 80
   origin: {x: 0, y: 0, z: 0}
   recycleAbovePlayer: 15
-  fallSpeed: 8
-  moveSpeed: 6
+  fallSpeed: 80
+  moveSpeed: 12
   cellSize: 1
   gridSize: 10
   reachableSlack: 0.85
@@ -1458,10 +1458,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TpsMover
   cam: {fileID: 330585546}
   controller: {fileID: 601263341}
-  speed: 6
+  speed: 12
   minMoveFramesOnTap: 1
   jumpSpeed: 6
-  fallSpeed: -6
+  fallSpeed: -80
   jumpDuration: 0.25
   groundedStick: -2
 --- !u!114 &601263340
@@ -1478,9 +1478,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LookController
   cameraPivot: {fileID: 71269283}
   PlayerRoot: {fileID: 601263342}
-  sensitivity: 10
-  pitchMin: -25
-  pitchMax: 20
+  sensitivity: 50
+  pitchMin: -90
+  pitchMax: 90
 --- !u!143 &601263341
 CharacterController:
   m_ObjectHideFlags: 0
