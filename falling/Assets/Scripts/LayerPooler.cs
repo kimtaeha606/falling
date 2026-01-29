@@ -6,14 +6,27 @@ public class LayerPooler : MonoBehaviour
     [Header("Setup")]
     [SerializeField] private FloorLayer layerPrefab;
     [SerializeField] private Transform player;
+    
 
     [Header("Pool")]
-    [SerializeField] private int poolCount = 30;
+    [SerializeField] private int poolCount = 4;
     [SerializeField] private float layerGap = 5f;
     [SerializeField] private Vector3 origin = Vector3.zero;
 
     [Header("Recycle")]
     [SerializeField] private float recycleAbovePlayer = 15f;
+
+    [Header("Player Motion (Constant)")]
+    [SerializeField] private float fallSpeed = 8f;   // y 등속 낙하(절댓값)
+    [SerializeField] private float moveSpeed = 6f;   // xz 등속 이동(최대)
+    [SerializeField] private float cellSize = 1f;    // FloorLayer와 동일
+    [SerializeField] private int gridSize = 10;      // 10x10
+    [SerializeField] private float reachableSlack = 0.85f; // 여유 계수
+    [SerializeField] private float minRadiusCells = 1.0f;  // 최소 반경(너무 빡세면 보정)
+
+
+    
+
 
     private readonly List<FloorLayer> layers = new();
 
@@ -41,11 +54,7 @@ public class LayerPooler : MonoBehaviour
             Debug.LogError("[LayerPooler] layerPrefab is null.", this);
             return;
         }
-        if (player == null)
-        {
-            Debug.LogError("[LayerPooler] player is null.", this);
-            return;
-        }
+        
         if (poolCount <= 0)
         {
             Debug.LogError("[LayerPooler] poolCount must be > 0.", this);
@@ -121,19 +130,50 @@ public class LayerPooler : MonoBehaviour
     // Return: (x,z) where x=0..8, z=0..8 (2x2 구멍의 좌상단)
     public Vector2Int PickNextHole()
     {
-        // NOTE: FloorLayer size=10, 2x2 구멍이면 시작 좌표는 0..8
-        // 지금은 단순 랜덤. 다음 단계에서:
-        // - lastHole 기반 반경 제한
-        // - 플레이어 낙하속도/이동속도 기반 도달가능 범위
-        // 로 교체하면 됨.
+        int max = gridSize - 2; // 2x2 구멍 좌상단: 0..8
 
-        int x = Random.Range(0, 9);
-        int z = Random.Range(0, 9);
+        float H = Mathf.Max(0.01f, layerGap);
+        float fs = Mathf.Max(0.01f, fallSpeed);
+        float ms = Mathf.Max(0.0f, moveSpeed);
 
-        lastHoleX = x;
-        lastHoleZ = z;
+        // 1) 다음 층까지 걸리는 시간(등속)
+        float t = H / fs;
 
-        return new Vector2Int(x, z);
+        // 2) 수평으로 움직일 수 있는 최대 거리
+        float R = ms * t * reachableSlack;
+
+        // 3) 셀 반경으로 변환
+        float rCells = R / Mathf.Max(0.001f, cellSize);
+        rCells = Mathf.Max(rCells, minRadiusCells);
+
+        // 4) 이전 구멍 주변 반경 내 후보 수집
+        int minX = Mathf.Clamp(Mathf.FloorToInt(lastHoleX - rCells), 0, max);
+        int maxX = Mathf.Clamp(Mathf.CeilToInt(lastHoleX + rCells), 0, max);
+        int minZ = Mathf.Clamp(Mathf.FloorToInt(lastHoleZ - rCells), 0, max);
+        int maxZ = Mathf.Clamp(Mathf.CeilToInt(lastHoleZ + rCells), 0, max);
+
+        float r2 = rCells * rCells;
+
+        List<Vector2Int> candidates = new List<Vector2Int>(128);
+        for (int z = minZ; z <= maxZ; z++)
+        for (int x = minX; x <= maxX; x++)
+        {
+            float dx = x - lastHoleX;
+            float dz = z - lastHoleZ;
+            if (dx * dx + dz * dz <= r2)
+                candidates.Add(new Vector2Int(x, z));
+        }
+
+        // 5) 후보 없으면 전체 랜덤(안전장치)
+        Vector2Int chosen;
+        if (candidates.Count == 0)
+            chosen = new Vector2Int(Random.Range(0, max + 1), Random.Range(0, max + 1));
+        else
+            chosen = candidates[Random.Range(0, candidates.Count)];
+
+        lastHoleX = chosen.x;
+        lastHoleZ = chosen.y;
+        return chosen;
     }
 
     // 5) GetMinLayerY
