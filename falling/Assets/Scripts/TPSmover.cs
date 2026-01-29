@@ -10,7 +10,7 @@ public class TpsMover : MonoBehaviour
     [Header("Move")]
     [SerializeField] private float speed = 6f;
 
-    [Tooltip("짧�? ??�� Update 관측에 걸리지 ?�으�? 최소 n?�레?��? 마�?�??�력??1�????�서 '?�짝 ?�직????보장")]
+    [Tooltip("짧�? ??�� Update 관측에 걸리지 ?�으�? 최소 n?�레?��? 마�?�??�력??1�????�서 '?�짝 ?�직????보장")]
     [SerializeField] private int minMoveFramesOnTap = 1;
 
     [Header("Jump/Gravity")]
@@ -19,17 +19,19 @@ public class TpsMover : MonoBehaviour
     [SerializeField] private float jumpDuration = 0.25f;
     [SerializeField] private float groundedStick = -2f;
 
+    
+
     private Vector2 moveInput;          // ?�재 ?�력 ?�태
-    private Vector2 lastNonZeroMove;    // 마�?�?�? ?�력
+    private Vector2 lastNonZeroMove;    // 마�?�?�? ?�력
     private int pendingMoveFrames;      // ??보장 ?�레??카운??
-    private float vY;                   // ?�직 ?�도
+    private float vY;                   // ?�직 ?�도
     private float jumpTimeRemaining;
 
     public void OnMove(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
 
-        // ?�력??0???�니�?"??보장"???�약
+        // ?�력??0???�니�?"??보장"???�약
         if (moveInput.sqrMagnitude > 0f)
         {
             lastNonZeroMove = moveInput;
@@ -88,6 +90,8 @@ public class TpsMover : MonoBehaviour
         Vector3 velocity = horizontal + Vector3.up * vY;
         controller.Move(velocity * Time.deltaTime);
     }
+
+    
 }
 
 

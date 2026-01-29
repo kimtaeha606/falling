@@ -11,6 +11,9 @@ public class FloorLayer : MonoBehaviour
     [SerializeField] private bool disableRendererForHole = true;  // 구멍이면 보이지 않게
     [SerializeField] private bool disableColliderForHole = true;  // 구멍이면 밟을 수 없게
 
+    
+
+
     // blocks[x,z]
     private GameObject[,] blocks;
     private Collider[,] cols;
@@ -26,6 +29,8 @@ public class FloorLayer : MonoBehaviour
     public void Initialize()
     {
         if (initialized) return;
+
+        
 
         blocks = new GameObject[size, size];
         cols   = new Collider[size, size];
@@ -43,7 +48,7 @@ public class FloorLayer : MonoBehaviour
         initialized = true;
     }
 
-    private GameObject CreateBlock(int x, int z)
+    private GameObject CreateBlock(int x, int z) 
     {
         // 기본 큐브 생성(메시+콜라이더 포함)
         var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -70,7 +75,7 @@ public class FloorLayer : MonoBehaviour
     }
 
     // 2) ResetAllBlocksActive: 구멍 복구
-    public void ResetAllBlocksActive()
+    public void ResetAllBlocksActive() 
     {
         if (!initialized) Initialize();
 
