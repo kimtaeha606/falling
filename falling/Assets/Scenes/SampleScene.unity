@@ -1250,7 +1250,7 @@ MonoBehaviour:
   origin: {x: 0, y: 0, z: 0}
   recycleAbovePlayer: 15
   fallSpeed: 80
-  moveSpeed: 12
+  moveSpeed: 36
   cellSize: 1
   gridSize: 10
   reachableSlack: 0.85
@@ -1458,7 +1458,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TpsMover
   cam: {fileID: 330585546}
   controller: {fileID: 601263341}
-  speed: 12
+  speed: 36
   minMoveFramesOnTap: 1
   jumpSpeed: 6
   fallSpeed: -80
