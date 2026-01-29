@@ -7,6 +7,11 @@ public class PlayerCollision : MonoBehaviour
     {
         if (isDead) return;
 
+        if (collision.collider.TryGetComponent<SoundTrigger>(out _))
+        {
+            GameSignals.RaiseSoundOn();
+        }
+
         if (collision.collider.TryGetComponent<Obstacle>(out var obstacle))
         {
             Die();
