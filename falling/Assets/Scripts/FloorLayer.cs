@@ -8,14 +8,17 @@ public class FloorLayer : MonoBehaviour
     [SerializeField] private float blockHeight = 1f;
 
     [Header("Hole Toggle")]
-    [SerializeField] private bool disableRendererForHole = true;  // 구멍?�면 보이지 ?�게
-    [SerializeField] private bool disableColliderForHole = true;  // 구멍?�면 밟을 ???�게
+    [SerializeField] private bool disableRendererForHole = true;  // 구멍?�면 보이지 ?�게
+    [SerializeField] private bool disableColliderForHole = true;  // 구멍?�면 밟을 ???�게
 
     [Header("Layer Color (Uniform)")]
     [Tooltip("Random color range (HSV) per layer.")]
     [SerializeField] private Vector2 hueRange = new Vector2(0f, 1f);
     [SerializeField] private Vector2 saturationRange = new Vector2(0.5f, 1f);
     [SerializeField] private Vector2 valueRange = new Vector2(0.6f, 1f);
+
+    
+
 
     // blocks[x,z]
     private GameObject[,] blocks;
@@ -25,14 +28,16 @@ public class FloorLayer : MonoBehaviour
 
     private bool initialized;
 
-    // ?�재 구멍(2x2)??좌상???�(?�버�?조회??
+    // ?�재 구멍(2x2)??좌상???�(?�버�?조회??
     private int holeX = -1;
     private int holeZ = -1;
 
-    // 1) Initialize: (?�리???�이) 10x10 블록 ?�성
+    // 1) Initialize: (?�리???�이) 10x10 블록 ?�성
     public void Initialize()
     {
         if (initialized) return;
+
+        
 
         blocks = new GameObject[size, size];
         cols   = new Collider[size, size];
@@ -51,22 +56,22 @@ public class FloorLayer : MonoBehaviour
         ApplyRandomLayerColor();
     }
 
-    private GameObject CreateBlock(int x, int z)
+    private GameObject CreateBlock(int x, int z) 
     {
-        // 기본 ?�브 ?�성(메시+콜라?�더 ?�함)
+        // 기본 ?�브 ?�성(메시+콜라?�더 ?�함)
         var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
         go.name = $"Block_{x}_{z}";
         go.transform.SetParent(transform, worldPositionStays: false);
 
-        // ?� 중앙??배치(�??�점 기�?)
+        // ?� 중앙??배치(�??�점 기�?)
         go.transform.localPosition = new Vector3((x + 0.5f) * cellSize, 0f, (z + 0.5f) * cellSize);
         go.transform.localScale = new Vector3(cellSize, blockHeight, cellSize);
 
-        // 기존 ?�리?�에 붙이???�성 ?�합
+        // 기존 ?�리?�에 붙이???�성 ?�합
         go.AddComponent<Obstacle>();            // instantKill 기본 true
-        // go.AddComponent<RandomBlockMaterial>(); // Awake?�서 ?�덤 컬러
+        // go.AddComponent<RandomBlockMaterial>(); // Awake?�서 ?�덤 컬러
 
-        // (?�택) ?�이?�로??구분?�면 Player ?�정???�순?�짐
+        // (?�택) ?�이?�로??구분?�면 Player ?�정???�순?�짐
         // go.layer = LayerMask.NameToLayer("Ground");
 
         return go;
@@ -119,7 +124,7 @@ public class FloorLayer : MonoBehaviour
     }
 
     // 2) ResetAllBlocksActive: 구멍 복구
-    public void ResetAllBlocksActive()
+    public void ResetAllBlocksActive() 
     {
         if (!initialized) Initialize();
 
@@ -134,7 +139,7 @@ public class FloorLayer : MonoBehaviour
         holeZ = -1;
     }
 
-    // 3) ApplyHole2x2: 구멍 2x2 ?�용
+    // 3) ApplyHole2x2: 구멍 2x2 ?�용
     public bool ApplyHole2x2(int x, int z)
     {
         if (!initialized) Initialize();
