@@ -1,15 +1,15 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class FloorLayer : MonoBehaviour
 {
     [Header("Grid")]
-    [SerializeField] private int size = 10;
+    [SerializeField] private int size = 5;
     [SerializeField] private float cellSize = 1f;
     [SerializeField] private float blockHeight = 1f;
 
     [Header("Hole Toggle")]
-    [SerializeField] private bool disableRendererForHole = true;  // 구멍?�면 보이지 ?�게
-    [SerializeField] private bool disableColliderForHole = true;  // 구멍?�면 밟을 ???�게
+    [SerializeField] private bool disableRendererForHole = true;  // 援щ찉?占쎈㈃ 蹂댁씠吏 ?占쎄쾶
+    [SerializeField] private bool disableColliderForHole = true;  // 援щ찉?占쎈㈃ 諛잛쓣 ???占쎄쾶
 
     [Header("Layer Color (Uniform)")]
     [Tooltip("Random color range (HSV) per layer.")]
@@ -17,7 +17,11 @@ public class FloorLayer : MonoBehaviour
     [SerializeField] private Vector2 saturationRange = new Vector2(0.5f, 1f);
     [SerializeField] private Vector2 valueRange = new Vector2(0.6f, 1f);
 
-    
+    [Header("Layer Material")]
+    [Tooltip("Base material asset to clone at runtime (keeps shader in build).")]
+    [SerializeField] private Material baseMaterial;
+    [Tooltip("Shader name to force on the cloned material (e.g., URP Lit).")]
+    [SerializeField] private string shaderName = "Universal Render Pipeline/Lit";
 
 
     // blocks[x,z]
@@ -28,11 +32,13 @@ public class FloorLayer : MonoBehaviour
 
     private bool initialized;
 
-    // ?�재 구멍(2x2)??좌상???�(?�버�?조회??
+    // ?占쎌옱 援щ찉(2x2)??醫뚯긽???占??占쎈쾭占?議고쉶??
     private int holeX = -1;
     private int holeZ = -1;
 
-    // 1) Initialize: (?�리???�이) 10x10 블록 ?�성
+    public int GridSize => size;
+
+    // 1) Initialize: (?占쎈━???占쎌씠) size x size 釉붾줉 ?占쎌꽦
     public void Initialize()
     {
         if (initialized) return;
@@ -58,20 +64,20 @@ public class FloorLayer : MonoBehaviour
 
     private GameObject CreateBlock(int x, int z) 
     {
-        // 기본 ?�브 ?�성(메시+콜라?�더 ?�함)
+        // 湲곕낯 ?占쎈툕 ?占쎌꽦(硫붿떆+肄쒕씪?占쎈뜑 ?占쏀븿)
         var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
         go.name = $"Block_{x}_{z}";
         go.transform.SetParent(transform, worldPositionStays: false);
 
-        // ?� 중앙??배치(�??�점 기�?)
-        go.transform.localPosition = new Vector3((x + 0.5f) * cellSize, 0f, (z + 0.5f) * cellSize);
-        go.transform.localScale = new Vector3(cellSize, blockHeight, cellSize);
+        // ?占?以묒븰??諛곗튂(占??占쎌젏 湲곤옙?)
+        go.transform.localPosition = new Vector3((x + 0.5f) * cellSize * 2f, 0f, (z + 0.5f) * cellSize * 2f);
+        go.transform.localScale = new Vector3(cellSize * 2f, blockHeight, cellSize * 2f);
 
-        // 기존 ?�리?�에 붙이???�성 ?�합
-        go.AddComponent<Obstacle>();            // instantKill 기본 true
-        // go.AddComponent<RandomBlockMaterial>(); // Awake?�서 ?�덤 컬러
+        // 湲곗〈 ?占쎈━?占쎌뿉 遺숈씠???占쎌꽦 ?占쏀빀
+        go.AddComponent<Obstacle>();            // instantKill 湲곕낯 true
+        // go.AddComponent<RandomBlockMaterial>(); // Awake?占쎌꽌 ?占쎈뜡 而щ윭
 
-        // (?�택) ?�이?�로??구분?�면 Player ?�정???�순?�짐
+        // (?占쏀깮) ?占쎌씠?占쎈줈??援щ텇?占쎈㈃ Player ?占쎌젙???占쎌닚?占쎌쭚
         // go.layer = LayerMask.NameToLayer("Ground");
 
         return go;
@@ -93,12 +99,33 @@ public class FloorLayer : MonoBehaviour
 
         if (layerMaterial == null)
         {
-            for (int z = 0; z < size; z++)
-            for (int x = 0; x < size; x++)
+            Material source = baseMaterial;
+            if (source == null)
             {
-                if (rens[x, z] == null) continue;
-                layerMaterial = new Material(rens[x, z].sharedMaterial);
-                break;
+                for (int z = 0; z < size; z++)
+                for (int x = 0; x < size; x++)
+                {
+                    if (rens[x, z] == null) continue;
+                    source = rens[x, z].sharedMaterial;
+                    break;
+                }
+            }
+
+            if (source == null)
+            {
+                Debug.LogError("[FloorLayer] No base material found. Assign baseMaterial in Inspector.", this);
+                return;
+            }
+
+            layerMaterial = new Material(source);
+
+            if (!string.IsNullOrEmpty(shaderName))
+            {
+                var shader = Shader.Find(shaderName);
+                if (shader != null)
+                    layerMaterial.shader = shader;
+                else
+                    Debug.LogWarning($"[FloorLayer] Shader not found: {shaderName}", this);
             }
         }
 
@@ -123,7 +150,7 @@ public class FloorLayer : MonoBehaviour
         }
     }
 
-    // 2) ResetAllBlocksActive: 구멍 복구
+    // 2) ResetAllBlocksActive: 援щ찉 蹂듦뎄
     public void ResetAllBlocksActive() 
     {
         if (!initialized) Initialize();
@@ -139,7 +166,7 @@ public class FloorLayer : MonoBehaviour
         holeZ = -1;
     }
 
-    // 3) ApplyHole2x2: 구멍 2x2 ?�용
+    // 3) ApplyHole2x2: 援щ찉 2x2 ?占쎌슜
     public bool ApplyHole2x2(int x, int z)
     {
         if (!initialized) Initialize();
@@ -176,7 +203,7 @@ public class FloorLayer : MonoBehaviour
         x = Mathf.Clamp(x, 0, size - 1);
         z = Mathf.Clamp(z, 0, size - 1);
 
-        Vector3 localCenter = new Vector3((x + 0.5f) * cellSize, 0f, (z + 0.5f) * cellSize);
+        Vector3 localCenter = new Vector3((x + 0.5f) * cellSize * 2f, 0f, (z + 0.5f) * cellSize * 2f);
         return transform.TransformPoint(localCenter);
     }
     private void OnDestroy()

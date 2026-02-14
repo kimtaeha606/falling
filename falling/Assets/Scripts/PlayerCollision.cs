@@ -12,6 +12,7 @@ public class PlayerCollision : MonoBehaviour
         if (other.TryGetComponent<SoundTrigger>(out _))
         {
             GameSignals.RaiseSoundOn();
+            Destroy(other.gameObject);
         }
 
         if (other.TryGetComponent<Obstacle>(out _))
