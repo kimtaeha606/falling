@@ -4,6 +4,11 @@ using TMPro;
 public class ScoreUI : MonoBehaviour
 {
     [SerializeField] private TMP_Text yText;
+    private float currentScore;
+    private bool hasScore;
+
+    public float CurrentScore => currentScore;
+    public bool HasScore => hasScore;
 
     private void OnEnable()
     {
@@ -17,6 +22,9 @@ public class ScoreUI : MonoBehaviour
 
     private void HandlePlayerYChanged(float y)
     {
+        currentScore = y;
+        hasScore = true;
+
         if (yText == null)
         {
             return;

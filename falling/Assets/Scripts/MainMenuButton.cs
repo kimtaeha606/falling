@@ -1,15 +1,21 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Retry : MonoBehaviour
+public class MainMenuButton : MonoBehaviour
 {
+    [SerializeField] private string mainMenuSceneName = "MainMenu";
     [SerializeField] private ScoreUI scoreUI;
 
-    public void ReloadGameScene()
+    public void LoadMainMenuScene()
     {
+        if (string.IsNullOrWhiteSpace(mainMenuSceneName))
+        {
+            Debug.LogError("[MainMenuButton] Main menu scene name is empty.", this);
+            return;
+        }
+
         PublishScoreEvent();
-        var scene = SceneManager.GetActiveScene();
-        SceneManager.LoadScene(scene.name);
+        SceneManager.LoadScene(mainMenuSceneName);
     }
 
     private void PublishScoreEvent()
