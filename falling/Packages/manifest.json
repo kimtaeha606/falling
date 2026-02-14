@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.roro.nanoworker.editor": "file:C:/UnityPackages/com.roro.nanoworker.editor",
     "com.unity.2d.enhancers": "1.0.0",
     "com.unity.ai.inference": "2.5.0",
     "com.unity.ai.navigation": "2.0.9",

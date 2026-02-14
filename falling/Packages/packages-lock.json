@@ -1,5 +1,13 @@
 {
   "dependencies": {
+    "com.roro.nanoworker.editor": {
+      "version": "file:C:/UnityPackages/com.roro.nanoworker.editor",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "3.0.2"
+      }
+    },
     "com.unity.2d.common": {
       "version": "12.0.1",
       "depth": 1,
