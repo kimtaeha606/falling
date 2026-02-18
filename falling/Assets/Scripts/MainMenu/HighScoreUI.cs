@@ -39,6 +39,6 @@ public class HighScoreUI : MonoBehaviour
             return;
         }
 
-        highScoreText.text = $"{prefix}{score}{suffix}";
+        highScoreText.text = $"{prefix}{Mathf.RoundToInt(score)}{suffix}";
     }
 }

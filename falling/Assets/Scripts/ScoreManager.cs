@@ -2,26 +2,53 @@ using UnityEngine;
 
 public class ScoreManager : MonoBehaviour
 {
-    [SerializeField] private Transform player;
-    private float lastY;
-    private bool hasLastY;
+    [Header("Score Settings")]
+    [SerializeField] private float startScore = 500f;
+    [SerializeField] private float fallSpeedPerSecond = 8f;
 
-    public float LastScore => lastY;
-    public bool HasScore => hasLastY;
+    private float lastScore;
+    private bool hasScore;
+    private bool isGameOver;
+
+    public float LastScore => lastScore;
+    public bool HasScore => hasScore;
+
+    private void Awake()
+    {
+        lastScore = startScore;
+        hasScore = true;
+        GameSignals.RaisePlayerYChanged(lastScore);
+    }
+
+    private void OnEnable()
+    {
+        GameSignals.GameOver += HandleGameOver;
+    }
+
+    private void OnDisable()
+    {
+        GameSignals.GameOver -= HandleGameOver;
+    }
 
     private void Update()
     {
-        if (player == null)
+        if (isGameOver || fallSpeedPerSecond <= 0f)
         {
             return;
         }
 
-        float y = player.position.y;
-        if (!hasLastY || !Mathf.Approximately(y, lastY))
+        float nextScore = lastScore - fallSpeedPerSecond * Time.deltaTime;
+        if (Mathf.Approximately(nextScore, lastScore))
         {
-            lastY = y;
-            hasLastY = true;
-            GameSignals.RaisePlayerYChanged(y);
+            return;
         }
+
+        lastScore = nextScore;
+        GameSignals.RaisePlayerYChanged(lastScore);
+    }
+
+    private void HandleGameOver()
+    {
+        isGameOver = true;
     }
 }

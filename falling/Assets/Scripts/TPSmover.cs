@@ -69,7 +69,7 @@ public class TpsMover : MonoBehaviour
             vY = fallSpeed;
         }
         // 4) ?�용
-        Vector3 velocity = horizontal + Vector3.up * vY;
+        Vector3 velocity = horizontal;
         controller.Move(velocity * Time.deltaTime);
     }
 

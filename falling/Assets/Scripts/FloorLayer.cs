@@ -75,6 +75,11 @@ public class FloorLayer : MonoBehaviour
 
         // 湲곗〈 ?占쎈━?占쎌뿉 遺숈씠???占쎌꽦 ?占쏀빀
         go.AddComponent<Obstacle>();            // instantKill 湲곕낯 true
+        var collider = go.GetComponent<Collider>();
+        if (collider != null)
+        {
+            collider.isTrigger = true;
+        }
         // go.AddComponent<RandomBlockMaterial>(); // Awake?占쎌꽌 ?占쎈뜡 而щ윭
 
         // (?占쏀깮) ?占쎌씠?占쎈줈??援щ텇?占쎈㈃ Player ?占쎌젙???占쎌닚?占쎌쭚
@@ -221,4 +226,3 @@ public class FloorLayer : MonoBehaviour
     }
 
 }
-

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 
 public class GameSignals : MonoBehaviour
@@ -10,7 +10,7 @@ public class GameSignals : MonoBehaviour
 
     public static void RaiseGameOver()
     {
-        Debug.Log("게임오버 호출됨");
+        Debug.Log("Game over triggered.");
         GameOver?.Invoke();
     }
 

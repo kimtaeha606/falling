@@ -30,6 +30,6 @@ public class ScoreUI : MonoBehaviour
             return;
         }
 
-        yText.text = $"{y}m";
+        yText.text = $"{Mathf.RoundToInt(y)}m";
     }
 }

@@ -23,6 +23,6 @@ public class GameOverScoreUI : MonoBehaviour
             score = scoreManager.LastScore;
         }
 
-        scoreText.text = $"{score}m";
+        scoreText.text = $"{Mathf.RoundToInt(score)}m";
     }
 }

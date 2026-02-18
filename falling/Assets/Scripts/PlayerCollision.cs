@@ -1,23 +1,77 @@
 using UnityEngine;
 public class PlayerCollision : MonoBehaviour
 {
+    [SerializeField] private CharacterController controller;
+    [SerializeField] private LayerMask obstacleMask = ~0;
+
+    private readonly Collider[] overlapBuffer = new Collider[16];
     private bool isDead;
 
-    private void OnControllerColliderHit(ControllerColliderHit hit)
+    private void Awake()
     {
-        if (isDead) return;
-
-        var other = hit.collider;
-
-        if (other.TryGetComponent<SoundTrigger>(out _))
+        if (controller == null)
         {
-            GameSignals.RaiseSoundOn();
-            Destroy(other.gameObject);
+            controller = GetComponent<CharacterController>();
+        }
+    }
+
+    private void OnEnable()
+    {
+        // Explicit reset for scene reload / re-enable paths.
+        isDead = false;
+    }
+
+    private void Update()
+    {
+        if (isDead || controller == null)
+        {
+            return;
+        }
+
+        CheckObstacleOverlap();
+    }
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (isDead || other == null)
+        {
+            return;
         }
 
         if (other.TryGetComponent<Obstacle>(out _))
         {
             Die();
+        }
+    }
+
+    private void CheckObstacleOverlap()
+    {
+        Bounds bounds = controller.bounds;
+        float radius = Mathf.Max(0.01f, controller.radius * 0.95f);
+        Vector3 center = bounds.center;
+        Vector3 pointA = new Vector3(center.x, bounds.min.y + radius, center.z);
+        Vector3 pointB = new Vector3(center.x, bounds.max.y - radius, center.z);
+
+        int count = Physics.OverlapCapsuleNonAlloc(
+            pointA,
+            pointB,
+            radius,
+            overlapBuffer,
+            obstacleMask,
+            QueryTriggerInteraction.Collide
+        );
+
+        for (int i = 0; i < count; i++)
+        {
+            Collider col = overlapBuffer[i];
+            if (col == null || col.transform == transform) continue;
+
+            if (col.TryGetComponent<Obstacle>(out _))
+            {
+                Die();
+                break;
+            }
         }
     }
 

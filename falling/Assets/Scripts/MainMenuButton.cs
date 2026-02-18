@@ -1,10 +1,34 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MainMenuButton : MonoBehaviour
 {
     [SerializeField] private string mainMenuSceneName = "MainMenu";
     [SerializeField] private ScoreUI scoreUI;
+    [SerializeField] private Button button;
+
+    private void Awake()
+    {
+        if (button == null)
+        {
+            button = GetComponent<Button>();
+        }
+
+        if (button != null)
+        {
+            button.onClick.RemoveListener(LoadMainMenuScene);
+            button.onClick.AddListener(LoadMainMenuScene);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (button != null)
+        {
+            button.onClick.RemoveListener(LoadMainMenuScene);
+        }
+    }
 
     public void LoadMainMenuScene()
     {

@@ -5,6 +5,7 @@ public static class HighScoreService
     private const string HighScoreKey = "HighScore";
     private static bool initialized;
 
+    public static bool HasSavedHighScore => PlayerPrefs.HasKey(HighScoreKey);
     public static float SavedHighScore => PlayerPrefs.GetFloat(HighScoreKey, 0f);
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -21,10 +22,18 @@ public static class HighScoreService
 
     private static void HandlePlayerYChanged(float score)
     {
-        float saved = SavedHighScore;
-        if (score >= saved)
+        if (float.IsNaN(score) || float.IsInfinity(score))
         {
             return;
+        }
+
+        if (HasSavedHighScore)
+        {
+            float saved = SavedHighScore;
+            if (score >= saved)
+            {
+                return;
+            }
         }
 
         PlayerPrefs.SetFloat(HighScoreKey, score);

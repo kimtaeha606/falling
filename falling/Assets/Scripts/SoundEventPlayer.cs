@@ -26,6 +26,13 @@ public class SoundEventPlayer : MonoBehaviour
         gameOverSource.spatialBlend = 0f; // 2D
     }
 
+    private void Start()
+    {
+        if (loopClip == null) return;
+
+        loopSource.Play();
+    }
+
     private void OnEnable()
     {
         GameSignals.SoundOn += HandleSoundOn;
