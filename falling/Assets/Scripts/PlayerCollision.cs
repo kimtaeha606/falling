@@ -7,6 +7,8 @@ public class PlayerCollision : MonoBehaviour
     private readonly Collider[] overlapBuffer = new Collider[16];
     private bool isDead;
 
+    public bool IsDead => isDead;
+
     private void Awake()
     {
         if (controller == null)
@@ -41,7 +43,7 @@ public class PlayerCollision : MonoBehaviour
 
         if (other.TryGetComponent<Obstacle>(out _))
         {
-            Die();
+            TryDieFromObstacle();
         }
     }
 
@@ -69,10 +71,20 @@ public class PlayerCollision : MonoBehaviour
 
             if (col.TryGetComponent<Obstacle>(out _))
             {
-                Die();
+                TryDieFromObstacle();
                 break;
             }
         }
+    }
+
+    public void TryDieFromObstacle()
+    {
+        if (isDead)
+        {
+            return;
+        }
+
+        Die();
     }
 
     void Die()

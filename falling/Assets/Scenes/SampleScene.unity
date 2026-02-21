@@ -585,7 +585,7 @@ MonoBehaviour:
   layerPrefab: {fileID: 2430587467273746142, guid: 2ff1e332c7ec1694a924b3dca5a2db4d, type: 3}
   player: {fileID: 601263342}
   poolCount: 4
-  layerGap: 150
+  layerGap: 250
   origin: {x: 0, y: 0, z: 0}
   recycleAbovePlayer: 45
   riseSpeed: 150
@@ -594,6 +594,10 @@ MonoBehaviour:
   gridSize: 10
   reachableSlack: 0.85
   minRadiusCells: 1
+  static2x2Weight: 1
+  pulseSizeWeight: 1
+  verticalMoveWeight: 1
+  horizontalMoveWeight: 1
 --- !u!4 &587353559
 Transform:
   m_ObjectHideFlags: 0

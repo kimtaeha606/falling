@@ -25,6 +25,12 @@ public class LayerPooler : MonoBehaviour
     [SerializeField] private float reachableSlack = 0.85f;
     [SerializeField] private float minRadiusCells = 1.0f;
 
+    [Header("Hole Type Weights")]
+    [SerializeField] private float static2x2Weight = 1f;
+    [SerializeField] private float pulseSizeWeight = 1f;
+    [SerializeField] private float verticalMoveWeight = 1f;
+    [SerializeField] private float horizontalMoveWeight = 1f;
+
     private readonly List<FloorLayer> layers = new();
 
     private int lastHoleX = 4;
@@ -75,7 +81,7 @@ public class LayerPooler : MonoBehaviour
             layer.Initialize();
 
             Vector2Int hole = PickNextHole(layer.GridSize);
-            layer.ApplyHole2x2(hole.x, hole.y);
+            layer.ApplyHole(hole.x, hole.y, PickHoleType());
 
             layers.Add(layer);
         }
@@ -89,12 +95,19 @@ public class LayerPooler : MonoBehaviour
         }
 
         float dy = riseSpeed * Time.deltaTime;
+        bool movedAnyLayer = false;
         for (int i = 0; i < layers.Count; i++)
         {
             FloorLayer layer = layers[i];
             if (layer == null) continue;
 
             layer.transform.position += Vector3.up * dy;
+            movedAnyLayer = true;
+        }
+
+        if (movedAnyLayer)
+        {
+            Physics.SyncTransforms();
         }
     }
 
@@ -132,8 +145,23 @@ public class LayerPooler : MonoBehaviour
         layer.transform.position = new Vector3(origin.x, newY, origin.z);
 
         Vector2Int hole = PickNextHole(layer.GridSize);
-        layer.ApplyHole2x2(hole.x, hole.y);
+        layer.ApplyHole(hole.x, hole.y, PickHoleType());
         layer.ApplyRandomLayerColor();
+    }
+
+    private FloorLayer.HoleType PickHoleType()
+    {
+        float roll = Random.value;
+
+        // 40%: static hole
+        if (roll < 0.4f) return FloorLayer.HoleType.Static2x2;
+
+        // 30%: moving hole (split equally: vertical 15%, horizontal 15%)
+        if (roll < 0.55f) return FloorLayer.HoleType.VerticalOscillate;
+        if (roll < 0.7f) return FloorLayer.HoleType.HorizontalOscillate;
+
+        // 30%: pulse-size hole
+        return FloorLayer.HoleType.PulseSize;
     }
 
     public Vector2Int PickNextHole(int boardSize)
